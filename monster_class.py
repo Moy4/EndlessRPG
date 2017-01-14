@@ -1,6 +1,6 @@
 class Monster():
 
-    won_ini = "Monster is attacking first!"
+    won_ini = "Monster hit you with: "
 
     attribute_dict = {
         'Strength': 30,
@@ -12,9 +12,9 @@ class Monster():
     }
 
     stat_dict = {
-        'HP': 20,
+        'HP': 50,
         'Mana': 5,
         }
 
     def attack(self, dice):
-        return self.attribute_dict['Strength'] + dice.k20_roll()
+        return self.attribute_dict['Strength'] + dice.k4_roll()

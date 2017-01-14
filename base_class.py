@@ -17,6 +17,8 @@ class BaseCharacter:
 
     info_dict = {'CLASS NAME': '', 'NAME': '', 'BIO': ''}
 
+    hero_ini = "You Hit this nigga with: "
+
     attribute_dict = {
         'Strength': 0,
         'Agility': 0,
@@ -24,6 +26,7 @@ class BaseCharacter:
         'Charisma': 0,
         'Perception': 0,
         'Luck': 0,
+        'Vigor': 0,
     }
 
     stat_dict = {
@@ -35,17 +38,17 @@ class BaseCharacter:
 
     # behaviour that every character will have
 
-    def attack(self, attribute, dice):
-        return attribute + dice.k20_roll()
+    def attack(self, dice):
+        return self.attribute_dict['Strength'] + dice.k4_roll()
 
-    def count_resistance(self, attribute, dice):
-        return attribute + dice.k4_roll()
+    def count_resistance(self, dice):
+        return self.attribute_dict['Vigor'] - 20 + dice.k4_roll()
 
     def set_name(self, name_string):
         self.info_dict['name'] = name_string
 
 
-class Barbarian(object, BaseCharacter):
+class Barbarian(BaseCharacter):
     def __init__(self):
         BaseCharacter.__init__(self)
     info_dict = {'CLASS NAME': 'Barbarian', 'NAME': 'Socrates'}
