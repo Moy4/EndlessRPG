@@ -189,7 +189,6 @@ class Main:
         quit()
 
     def game_intro(self):
-
         """
         First called function all while for if loops
         are very repetetive, must be refactored in
@@ -227,6 +226,3 @@ class Main:
             gameDisplay.fill(black)
             pygame.display.update()
 
-main = Main()
-main.game_intro()
-clock.tick(FPS)

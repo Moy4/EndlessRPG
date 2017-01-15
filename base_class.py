@@ -14,6 +14,9 @@ class BaseCharacter:
     def __init__(self):
         for attribute in self.attribute_dict:
             self.attribute_dict[attribute] = randint(25, 50)
+        self.stat_dict['HP'] = 50
+        self.stat_dict['Mana'] = 5
+        self.stat_dict['LVL'] = 1
 
     info_dict = {'CLASS NAME': '', 'NAME': '', 'BIO': ''}
 
@@ -30,10 +33,10 @@ class BaseCharacter:
     }
 
     stat_dict = {
-        'HP': 20,
-        'Mana': 5,
+        'HP': 0,
+        'Mana': 0,
         'XP': 0,
-        "LVL": 1,
+        "LVL": 0,
     }
 
     # behaviour that every character will have

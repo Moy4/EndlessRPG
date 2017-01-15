@@ -85,6 +85,9 @@ class Interface:
             thirdsurf, thirdrect = text_objects("[a] Travel West", smallText, red)
             thirdrect.center = (126, 490)
             gameDisplay.blit(thirdsurf, thirdrect)
+            forthsurf, forthrect = text_objects("[i] Inventory", smallText, red)
+            forthrect.center = (740, 500)
+            gameDisplay.blit(forthsurf, forthrect)
             self.hero_stats(smallText)
             pygame.display.update()
 
@@ -97,8 +100,6 @@ class Interface:
             self.hero_action(monster_class)
 
     def counting_monster_attack(self, monster):
-
-        print "Instancje w monster action:" + str(sys.getrefcount(monster))
         displaaayloop = True
         attack_value = monster.attack(self.dice) - self.choosen_hero.count_resistance(self.dice)
         stringvalue = str(attack_value)
@@ -122,6 +123,7 @@ class Interface:
             time.sleep(3)
             if self.choosen_hero.stat_dict['HP'] <= 0:
                 print "Instancje Hero przy przegranej:" + str(sys.getrefcount(self.choosen_hero))
+                del self.choosen_hero
                 self.on_losing()
             else:
                 self.hero_action(monster)
@@ -159,10 +161,10 @@ class Interface:
     def attacking(self, monster):
         print "Instancje attackingu " + str(sys.getrefcount(monster))
         print monster.stat_dict['HP']
-        print monster
         attack_value = self.choosen_hero.attack(self.dice)
         stringvalue = str(attack_value)
         monster.stat_dict["HP"] -= attack_value
+        print monster.stat_dict['HP']
         gameDisplay.fill(black)
         pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
         smallText = pygame.font.Font(None, 30)
@@ -186,7 +188,7 @@ class Interface:
 
     def on_losing(self):
         from main import Main
-        del self.choosen_hero
+        main = Main()
         dupsztal = True
         while dupsztal:
             for event in pygame.event.get():
@@ -194,11 +196,11 @@ class Interface:
                         pygame.quit()
                         quit()
             gameDisplay.fill(black)
-            largeText = pygame.font.Font('OldLondon.ttf', 115)
+            largeText = pygame.font.Font('OldLondon.ttf', 80)
             TextSurf, TextRect = text_objects('You Lose! Start Again?', largeText, red)
             TextRect.center = ((display_width/2), (70))
             gameDisplay.blit(titleImg, (175, 150))
             gameDisplay.blit(TextSurf, TextRect)
-            button("Start Again", 150, 450, 100, 50, black, dark_gray, Main.choose_hero)
-            button("Quit", 550, 450, 100, 50, black, dark_gray, Main.quitgame)
+            button("Start Again", 150, 450, 150, 50, black, dark_gray, main.choose_hero)
+            button("Quit", 550, 450, 100, 50, black, dark_gray, main.quitgame)
             pygame.display.update()
