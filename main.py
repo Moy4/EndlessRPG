@@ -1,9 +1,19 @@
+import time
+
 from base_class import *
 from static_settings import *
 from Interface import Interface
 
 
 class Main:
+
+    def minus_attr(self, instance, value):
+        time.sleep(0.25)
+        instance.attribute_dict[value] -= 1
+
+    def plus_attr(self, instance, value):
+        time.sleep(0.25)
+        instance.attribute_dict[value] += 1
 
     def start_game(self, hero_instance):
         Interface(hero_instance).traveling_screen()
@@ -80,14 +90,16 @@ class Main:
             space_counter = 0
             for field, value in hunter.attribute_dict.items():
                 space_counter += 70
+                add_button("<", 7, (10 + space_counter), 25, 25, black, dark_gray, hunter, field, self.minus_attr)
+                add_button(">", 190, (10 + space_counter), 25, 25, black, dark_gray, hunter, field, self.plus_attr)
                 row = field, str(value)
                 makelist = list(row)
                 makestring = ': '.join(makelist)
                 textSurf, textRect = text_objects(makestring, smallText, red)
-                textRect.center = (80, (22 + space_counter))
+                textRect.center = (110, (22 + space_counter))
                 gameDisplay.blit(textSurf, textRect)
             textSurf, textRect = text_objects('Hero Info', meciumText, red)
-            textRect.center = (250, 40)
+            textRect.center = (290, 40)
             gameDisplay.blit(textSurf, textRect)
             space_counter = 0
             for field, value in hunter.info_dict.items():
@@ -96,16 +108,16 @@ class Main:
                 makelist = list(row)
                 makestring = ': '.join(makelist)
                 textSurf, textRect = text_objects(makestring, smallText, red)
-                textRect.center = (340, (60 + space_counter))
+                textRect.center = (370, (60 + space_counter))
                 gameDisplay.blit(textSurf, textRect)
-            bio = wrapline(hunter.bio,font,500)
+            bio = wrapline(hunter.bio, font, 500)
             textSurf, textRect = text_objects('BIO:', smallText, red)
-            textRect.center = (230, 150)
+            textRect.center = (270, 150)
             gameDisplay.blit(textSurf, textRect)
             for i in bio:
                 space_counter += 25
                 textSurf, textRect = text_objects(i, smallText, red)
-                textRect.center = (470, (70 + space_counter))
+                textRect.center = (510, (70 + space_counter))
                 gameDisplay.blit(textSurf, textRect)
             start_button("Play", display_width/2, 450, 100, 50, black, dark_gray, hunter, self.start_game)
             button("Back", 680, 20, 100, 50, black, dark_gray, self.choose_hero)

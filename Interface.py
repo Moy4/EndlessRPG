@@ -1,6 +1,5 @@
 from random import randint
 import time
-import gc
 import sys
 
 from monster_class import Monster
