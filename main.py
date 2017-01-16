@@ -11,8 +11,6 @@ class Main:
         time.sleep(0.25)
         if instance.const_dict[value] == instance.attribute_dict[value]:
             allow_flag = False
-        elif value > instance.attribute_dict[value]:
-            allow_flag = True
         else:
             allow_flag = True
 
@@ -100,6 +98,7 @@ class Main:
     def hunter_hero(self):
         hunter = Hunter()
         choose = True
+        print hunter.const_dict
         while choose:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -114,9 +113,8 @@ class Main:
             gameDisplay.blit(textSurf, textRect)
             space_counter = 0
             for field, value in hunter.attribute_dict.items():
-
                 space_counter += 70
-                minus_button("<", 7, (10 + space_counter), 25, 25, black, dark_gray, hunter, field, self.minus_attr)
+                add_button("<", 7, (10 + space_counter), 25, 25, black, dark_gray, hunter, field, self.minus_attr)
                 add_button(">", 190, (10 + space_counter), 25, 25, black, dark_gray, hunter, field, self.plus_attr)
                 row = field, str(value)
                 makelist = list(row)
