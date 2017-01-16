@@ -98,6 +98,28 @@ def add_button(msg, x, y, w, h, ic, ac, acion_arg, action_arg, action=None):
     gameDisplay.blit(textSurf, textRect)
 
 
+def minus_button(msg, x, y, w, h, ic, ac, acion_arg, action_arg, action=None):
+    """
+    Start Button used once to pass choosen instance
+    to next stage of game
+    """
+
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    if x+w > mouse[0] > x and y+h > mouse[1] > y:
+        pygame.draw.rect(gameDisplay, ac, (x, y, w, h))
+        if click[0] == 1 and action:
+            # pygame.mixer.music.stop()
+            # pygame.mixer.Sound.play(button_sound)
+            action(acion_arg, action_arg)
+    else:
+        pygame.draw.rect(gameDisplay, ic, (x, y, w, h))
+    smallText = pygame.font.Font('Deutsch.ttf',27)
+    textSurf, textRect = text_objects(msg, smallText, red)
+    textRect.center = ((x+(w/2)), (y+(h/2)))
+    gameDisplay.blit(textSurf, textRect)
+
+
 def truncline(text, font, maxwidth):
         real = len(text)
         stext = text

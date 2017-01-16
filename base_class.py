@@ -17,6 +17,7 @@ class BaseCharacter:
         self.stat_dict['HP'] = 50
         self.stat_dict['Mana'] = 5
         self.stat_dict['LVL'] = 1
+        self.attribute_points = 10
 
     info_dict = {'CLASS NAME': '', 'NAME': '', 'BIO': ''}
 
@@ -38,6 +39,9 @@ class BaseCharacter:
         'XP': 0,
         "LVL": 0,
     }
+
+    attribute_points = 0
+    lvl_points = 0
 
     # behaviour that every character will have
 

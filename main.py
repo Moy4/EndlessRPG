@@ -7,13 +7,33 @@ from Interface import Interface
 
 class Main:
 
+    func_called = 0
+    variable = 0
+
     def minus_attr(self, instance, value):
+
         time.sleep(0.25)
-        instance.attribute_dict[value] -= 1
+        print self.variable
+        if self.variable == instance.attribute_dict[value]:
+            allow_flag = False
+        elif value > instance.attribute_dict[value]:
+            allow_flag = True
+        else:
+            allow_flag = True
+
+        if allow_flag and instance.attribute_points != 10:
+            instance.attribute_dict[value] -= 1
+            instance.attribute_points += 1
 
     def plus_attr(self, instance, value):
         time.sleep(0.25)
-        instance.attribute_dict[value] += 1
+        if instance.attribute_points != 0:
+            allow_flag = True
+        else:
+            allow_flag = False
+        if allow_flag:
+            instance.attribute_points -= 1
+            instance.attribute_dict[value] += 1
 
     def start_game(self, hero_instance):
         Interface(hero_instance).traveling_screen()
@@ -41,7 +61,10 @@ class Main:
             space_counter = 0
             for field, value in mage.attribute_dict.items():
                 space_counter += 70
+                add_button("<", 7, (10 + space_counter), 25, 25, black, dark_gray, mage, field, self.minus_attr)
+                add_button(">", 190, (10 + space_counter), 25, 25, black, dark_gray, mage, field, self.plus_attr)
                 row = field, str(value)
+
                 makelist = list(row)
                 makestring = ': '.join(makelist)
                 textSurf, textRect = text_objects(makestring, smallText, red)
@@ -70,6 +93,12 @@ class Main:
                 gameDisplay.blit(textSurf, textRect)
             start_button("Play", display_width/2, 450, 100, 50, black, dark_gray, mage, self.start_game)
             button("Back", 680, 20, 100, 50, black, dark_gray, self.choose_hero)
+            textSurf, textRect = text_objects(str(mage.attribute_points), smallText, red)
+            textRect.center = (190, 550)
+            gameDisplay.blit(textSurf, textRect)
+            textSurf, textRect = text_objects('Points: ', meciumText, red)
+            textRect.center = (120, 550)
+            gameDisplay.blit(textSurf, textRect)
             pygame.display.update()
 
     def hunter_hero(self):
@@ -89,8 +118,9 @@ class Main:
             gameDisplay.blit(textSurf, textRect)
             space_counter = 0
             for field, value in hunter.attribute_dict.items():
+
                 space_counter += 70
-                add_button("<", 7, (10 + space_counter), 25, 25, black, dark_gray, hunter, field, self.minus_attr)
+                minus_button("<", 7, (10 + space_counter), 25, 25, black, dark_gray, hunter, field, self.minus_attr)
                 add_button(">", 190, (10 + space_counter), 25, 25, black, dark_gray, hunter, field, self.plus_attr)
                 row = field, str(value)
                 makelist = list(row)
@@ -121,6 +151,12 @@ class Main:
                 gameDisplay.blit(textSurf, textRect)
             start_button("Play", display_width/2, 450, 100, 50, black, dark_gray, hunter, self.start_game)
             button("Back", 680, 20, 100, 50, black, dark_gray, self.choose_hero)
+            textSurf, textRect = text_objects(str(hunter.attribute_points), smallText, red)
+            textRect.center = (190, 550)
+            gameDisplay.blit(textSurf, textRect)
+            textSurf, textRect = text_objects('Points: ', meciumText, red)
+            textRect.center = (120, 550)
+            gameDisplay.blit(textSurf, textRect)
             pygame.display.update()
 
     def barb_hero(self):
@@ -141,6 +177,8 @@ class Main:
             space_counter = 0
             for field, value in barb.attribute_dict.items():
                 space_counter += 70
+                add_button("<", 7, (10 + space_counter), 25, 25, black, dark_gray, barb, field, self.minus_attr)
+                add_button(">", 190, (10 + space_counter), 25, 25, black, dark_gray, barb, field, self.plus_attr)
                 row = field, str(value)
                 makelist = list(row)
                 makestring = ': '.join(makelist)
@@ -170,6 +208,12 @@ class Main:
                 gameDisplay.blit(textSurf, textRect)
             start_button("Play", display_width/2, 450, 100, 50, black, dark_gray, barb, self.start_game)
             button("Back", 680, 20, 100, 50, black, dark_gray, self.choose_hero)
+            textSurf, textRect = text_objects(str(barb.attribute_points), smallText, red)
+            textRect.center = (190, 550)
+            gameDisplay.blit(textSurf, textRect)
+            textSurf, textRect = text_objects('Points: ', meciumText, red)
+            textRect.center = (120, 550)
+            gameDisplay.blit(textSurf, textRect)
             pygame.display.update()
 
     def choose_hero(self):
