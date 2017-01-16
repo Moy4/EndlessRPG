@@ -29,8 +29,8 @@ class Main:
             instance.attribute_dict[value] += 1
 
     def start_game(self, hero_instance):
-        hero_instance.const_dict = hero_instance.attribute_dict
-        Interface(hero_instance).traveling_screen()
+        hero_instance.const_dict = hero_instance.attribute_dict.copy()
+        Interface(hero_instance).lvl_up()
 
     def mage_hero(self):
         """

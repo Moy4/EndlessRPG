@@ -19,7 +19,7 @@ class Interface:
         self.choosen_hero = instance
         self.dice = Dice()
 
-    def minus_lvl_up(self, ins, value):
+    def minus_lvl_up(self, ins, value, ):
         time.sleep(0.25)
         if self.choosen_hero.const_dict[value] == self.choosen_hero.attribute_dict[value]:
             allow_flag = False
@@ -196,15 +196,15 @@ class Interface:
         seconfrect.center = (122, 460)
         gameDisplay.blit(seconfsurf, seconfrect)
         self.hero_stats(smallText)
+        if monster.stat_dict['HP'] <= 0:
+            seconfsurfe, seconfrecte = text_objects("Wygrales Walke", smallText, red)
+            seconfrecte.center = (122, 460)
+            gameDisplay.blit(seconfsurfe, seconfrecte)
+            pygame.display.update()
         pygame.display.update()
         time.sleep(3)
         print monster
         if monster.stat_dict['HP'] > 0:
-            seconfsurf, seconfrect = text_objects("Wygrales Walke", smallText, red)
-            seconfrect.center = (122, 460)
-            gameDisplay.blit(seconfsurf, seconfrect)
-            pygame.display.update()
-            time.sleep(3)
             self.counting_monster_attack(monster)
         else:
             print "TYLE JEST TYCH KUREW:" + str(sys.getrefcount(monster))
@@ -236,6 +236,7 @@ class Interface:
 
     def lvl_up(self):
         choose = True
+        self.choosen_hero.lvl_points = 3
         self.choosen_hero.stat_dict["LVL"] += 1
         self.choosen_hero.stat_dict["XP"] = 0
         while choose:
@@ -254,7 +255,7 @@ class Interface:
             for field, value in self.choosen_hero.attribute_dict.items():
                 space_counter += 70
                 add_button("<", 7, (10 + space_counter), 25, 25, black, dark_gray, self.choosen_hero, field, self.minus_lvl_up)
-                add_button(">", 190, (10 + space_counter), 25, 25, black, dark_gray, self.choosen_hero, field,  self.plus_lvl_up)
+                add_button(">", 190, (10 + space_counter), 25, 25, black, dark_gray, self.choosen_hero, field, self.plus_lvl_up)
                 row = field, str(value)
                 makelist = list(row)
                 makestring = ': '.join(makelist)
