@@ -7,14 +7,9 @@ from Interface import Interface
 
 class Main:
 
-    func_called = 0
-    variable = 0
-
     def minus_attr(self, instance, value):
-
         time.sleep(0.25)
-        print self.variable
-        if self.variable == instance.attribute_dict[value]:
+        if instance.const_dict[value] == instance.attribute_dict[value]:
             allow_flag = False
         elif value > instance.attribute_dict[value]:
             allow_flag = True
@@ -36,6 +31,7 @@ class Main:
             instance.attribute_dict[value] += 1
 
     def start_game(self, hero_instance):
+        hero_instance.const_dict = hero_instance.attribute_dict
         Interface(hero_instance).traveling_screen()
 
     def mage_hero(self):

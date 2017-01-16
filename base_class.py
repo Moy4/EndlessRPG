@@ -14,6 +14,7 @@ class BaseCharacter:
     def __init__(self):
         for attribute in self.attribute_dict:
             self.attribute_dict[attribute] = randint(25, 50)
+            self.const_dict = self.attribute_dict
         self.stat_dict['HP'] = 50
         self.stat_dict['Mana'] = 5
         self.stat_dict['LVL'] = 1
@@ -32,6 +33,8 @@ class BaseCharacter:
         'Luck': 0,
         'Vigor': 0,
     }
+
+    const_dict = {}
 
     stat_dict = {
         'HP': 0,
