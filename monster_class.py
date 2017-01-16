@@ -6,7 +6,7 @@ class Monster:
     def __init__(self):
         for attribute in self.attribute_dict:
             self.attribute_dict[attribute] = randint(25, 50)
-        self.stat_dict['HP'] = 50
+        self.stat_dict['HP'] = 10
         self.stat_dict['Mana'] = 5
 
 

@@ -18,6 +18,7 @@ class BaseCharacter:
         self.stat_dict['Mana'] = 5
         self.stat_dict['LVL'] = 1
         self.attribute_points = 10
+        self.lvl_points = 3
         self.const_dict = self.attribute_dict.copy()
 
     info_dict = {'CLASS NAME': '', 'NAME': '', 'BIO': ''}

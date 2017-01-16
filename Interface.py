@@ -19,6 +19,28 @@ class Interface:
         self.choosen_hero = instance
         self.dice = Dice()
 
+    def minus_lvl_up(self, ins, value):
+        time.sleep(0.25)
+        if self.choosen_hero.const_dict[value] == self.choosen_hero.attribute_dict[value]:
+            allow_flag = False
+        else:
+            allow_flag = True
+
+        if allow_flag and self.choosen_hero.lvl_points != 3:
+            self.choosen_hero.attribute_dict[value] -= 1
+            self.choosen_hero.lvl_points += 1
+
+    def plus_lvl_up(self, ins, value):
+        time.sleep(0.25)
+        if self.choosen_hero.lvl_points != 0:
+            allow_flag = True
+        else:
+            allow_flag = False
+        if allow_flag:
+            self.choosen_hero.lvl_points -= 1
+            self.choosen_hero.attribute_dict[value] += 1
+
+
     def display_text_animation(self, string, dupa):
         """
         For now this function is not in use
@@ -178,12 +200,20 @@ class Interface:
         time.sleep(3)
         print monster
         if monster.stat_dict['HP'] > 0:
+            seconfsurf, seconfrect = text_objects("Wygrales Walke", smallText, red)
+            seconfrect.center = (122, 460)
+            gameDisplay.blit(seconfsurf, seconfrect)
+            pygame.display.update()
+            time.sleep(3)
             self.counting_monster_attack(monster)
         else:
             print "TYLE JEST TYCH KUREW:" + str(sys.getrefcount(monster))
             del monster
             self.choosen_hero.stat_dict['XP'] += 25
-            self.traveling_screen()
+            if self.choosen_hero.stat_dict['XP'] == 100:
+                self.lvl_up()
+            else:
+                self.traveling_screen()
 
     def on_losing(self):
         from main import Main
@@ -202,4 +232,42 @@ class Interface:
             gameDisplay.blit(TextSurf, TextRect)
             button("Start Again", 150, 450, 150, 50, black, dark_gray, main.choose_hero)
             button("Quit", 550, 450, 100, 50, black, dark_gray, main.quitgame)
+            pygame.display.update()
+
+    def lvl_up(self):
+        choose = True
+        self.choosen_hero.stat_dict["LVL"] += 1
+        self.choosen_hero.stat_dict["XP"] = 0
+        while choose:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+            gameDisplay.fill(black)
+            pygame.draw.rect(gameDisplay, black, (20, 20, 760, 560))
+            smallText = pygame.font.Font('OldLondon.ttf', 30)
+            meciumText = pygame.font.Font('OldLondon.ttf', 40)
+            textSurf, textRect = text_objects('Statistics', meciumText, red)
+            textRect.center = (80, 40)
+            gameDisplay.blit(textSurf, textRect)
+            space_counter = 0
+            for field, value in self.choosen_hero.attribute_dict.items():
+                space_counter += 70
+                add_button("<", 7, (10 + space_counter), 25, 25, black, dark_gray, self.choosen_hero, field, self.minus_lvl_up)
+                add_button(">", 190, (10 + space_counter), 25, 25, black, dark_gray, self.choosen_hero, field,  self.plus_lvl_up)
+                row = field, str(value)
+                makelist = list(row)
+                makestring = ': '.join(makelist)
+                textSurf, textRect = text_objects(makestring, smallText, red)
+                textRect.center = (110, (22 + space_counter))
+                gameDisplay.blit(textSurf, textRect)
+            button("Apply", 680, 20, 100, 50, black, dark_gray, self.traveling_screen)
+            textSurf, textRect = text_objects(str(self.choosen_hero.lvl_points), smallText, red)
+            textRect.center = (190, 550)
+            gameDisplay.blit(textSurf, textRect)
+            textSurf, textRect = text_objects('Points: ', meciumText, red)
+            textRect.center = (120, 550)
+            gameDisplay.blit(textSurf, textRect)
+            gameDisplay.blit(lvl_upImg, (400, 300))
+
             pygame.display.update()

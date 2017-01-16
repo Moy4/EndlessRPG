@@ -28,6 +28,7 @@ gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('SebaRPG')
 font = pygame.font.Font('OldLondon.ttf', 36)
 titleImg = pygame.image.load('newdevil.png')
+lvl_upImg = pygame.image.load('knight.png')
 
 
 def text_objects(text, font, color):

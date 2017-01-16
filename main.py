@@ -98,7 +98,6 @@ class Main:
     def hunter_hero(self):
         hunter = Hunter()
         choose = True
-        print hunter.const_dict
         while choose:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
