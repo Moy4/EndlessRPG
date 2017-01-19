@@ -21,6 +21,9 @@ class BaseCharacter:
         self.attribute_points = 10
         self.lvl_points = 0
         self.const_dict = self.attribute_dict.copy()
+        self.item_list = []
+
+    item_list = []
 
     info_dict = {'CLASS NAME': '', 'NAME': '', 'BIO': ''}
 

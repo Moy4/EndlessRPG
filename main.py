@@ -30,7 +30,7 @@ class Main:
 
     def start_game(self, hero_instance):
         hero_instance.const_dict = hero_instance.attribute_dict.copy()
-        Interface(hero_instance).lvl_up()
+        Interface(hero_instance).item_found()
 
     def mage_hero(self):
         """
