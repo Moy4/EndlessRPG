@@ -27,4 +27,4 @@ class Monster:
         }
 
     def attack(self, dice):
-        return self.attribute_dict['Strength'] + dice.k4_roll()
+        return self.attribute_dict['Strength'] + dice.k6_roll()

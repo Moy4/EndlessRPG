@@ -22,7 +22,9 @@ class BaseCharacter:
         self.lvl_points = 0
         self.const_dict = self.attribute_dict.copy()
         self.item_list = []
+        self. parry_bonus = 0
 
+    parry_bonus = 0
     item_list = []
 
     info_dict = {'CLASS NAME': '', 'NAME': '', 'BIO': ''}
@@ -57,7 +59,7 @@ class BaseCharacter:
         return self.attribute_dict['Strength'] + dice.k4_roll()
 
     def count_resistance(self, dice):
-        return self.attribute_dict['Vigor'] - 20 + dice.k4_roll()
+        return (self.attribute_dict['Vigor'] - 15) + dice.k4_roll()
 
     def set_name(self, name_string):
         self.info_dict['name'] = name_string

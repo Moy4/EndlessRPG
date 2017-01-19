@@ -19,8 +19,8 @@ class Sword(Item):
 class Armor(Item):
     def __init__(self):
         self.name = "Fajna Zbroja "
-        self.defens = randint(1, 5)
-        self.info = "+" + str(self.defens) + " to base damage"
+        self.defense = randint(1, 5)
+        self.info = "+" + str(self.defense) + " to base damage"
 
 
 class Potion(Item):

@@ -81,10 +81,10 @@ class Interface:
             self.item_found()
 
     def traveling_screen(self):
+        print "LISTA: "
+        print self.choosen_hero.item_list
         monster = Monster()
-        print "Instancje w Travelingu:" + str(sys.getrefcount(monster))
         displayloop = True
-        setter = randint(0, 99)
         while displayloop:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -127,9 +127,29 @@ class Interface:
         else:
             self.hero_action(monster_class)
 
+    def counting_hero_defence(self):
+        if len(self.choosen_hero.item_list) != 0:
+            for item in self.choosen_hero.item_list:
+                if item.name == "Fajna Zbroja ":
+
+                    bonus = item.defense
+                    print "bonus oborny: " + str(bonus)
+                    return bonus + self.choosen_hero.count_resistance(self.dice)
+                else:
+                    return self.choosen_hero.attack(self.dice)
+        else:
+            return self.choosen_hero.attack(self.dice)
+
     def counting_monster_attack(self, monster):
         displaaayloop = True
-        attack_value = monster.attack(self.dice) - self.choosen_hero.count_resistance(self.dice)
+        print "POSTACI OBRONA"
+        print self.counting_hero_defence()
+        print "JEGO ATAK"
+        print monster.attack(self.dice)
+
+        print type(monster.attack(self.dice))
+        print type(self.counting_hero_defence)
+        attack_value = monster.attack(self.dice) - self.counting_hero_defence()
         stringvalue = str(attack_value)
         self.choosen_hero.stat_dict["HP"] -= attack_value
         while displaaayloop:
@@ -156,7 +176,20 @@ class Interface:
             else:
                 self.hero_action(monster)
 
+    def counting_parry(self, monster):
+        self.choosen_hero.parry_bonus = 3
+        gameDisplay.fill(black)
+        pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
+        smallText = pygame.font.Font(None, 30)
+        seconfsurfe, seconfrecte = text_objects("Obrona zwieksza sie o 3 na jedna ture!", smallText, red)
+        seconfrecte.center = (200, 460)
+        gameDisplay.blit(seconfsurfe, seconfrecte)
+        pygame.display.update()
+        time.sleep(3)
+        self.counting_monster_attack(monster)
+
     def hero_action(self, monster):
+        self.choosen_hero.parry_bonus = 0
         print "Instancje w hero action:" + str(sys.getrefcount(monster))
         displaaaayloop = True
         while displaaaayloop:
@@ -168,7 +201,7 @@ class Interface:
                     if event.key == pygame.K_w:
                         self.attacking(monster)
                     elif event.key == pygame.K_d:
-                        print "sraka"
+                        self.counting_parry(monster)
                     elif event.key == pygame.K_a:
                         print "dupaka"
             gameDisplay.fill(black)
@@ -186,10 +219,22 @@ class Interface:
             self.hero_stats(smallText)
             pygame.display.update()
 
+    def counting_attack(self):
+        if len(self.choosen_hero.item_list) != 0:
+            for item in self.choosen_hero.item_list:
+                if item.name == "Super Miecz ":
+                    bonus = item.attack
+                    print"bonus ataku: " + str(bonus)
+                    return bonus + self.choosen_hero.attack(self.dice)
+                else:
+                    return self.choosen_hero.attack(self.dice)
+        else:
+            return self.choosen_hero.attack(self.dice)
+
     def attacking(self, monster):
-        print "Instancje attackingu " + str(sys.getrefcount(monster))
         print monster.stat_dict['HP']
-        attack_value = self.choosen_hero.attack(self.dice)
+        print self.counting_attack()
+        attack_value = self.counting_attack()
         stringvalue = str(attack_value)
         monster.stat_dict["HP"] -= attack_value
         print monster.stat_dict['HP']
@@ -210,11 +255,9 @@ class Interface:
             pygame.display.update()
         pygame.display.update()
         time.sleep(3)
-        print monster
         if monster.stat_dict['HP'] > 0:
             self.counting_monster_attack(monster)
         else:
-            print "TYLE JEST TYCH KUREW:" + str(sys.getrefcount(monster))
             del monster
             self.choosen_hero.stat_dict['XP'] += 25
             if self.choosen_hero.stat_dict['XP'] == 100:
@@ -299,6 +342,7 @@ class Interface:
         item_loop = True
         item = self.random_item()
         self.choosen_hero.item_list.append(item)
+
         while item_loop:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
