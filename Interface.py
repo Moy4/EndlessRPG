@@ -74,15 +74,20 @@ class Interface:
             gameDisplay.blit(statsurf, statrect)
 
     def random_screen(self, instanc):
+        print "WYBIERAM EKRAN"
         setter = randint(1, 100)
         if setter <= 70:
             self.fighting_screen(instanc)
-        elif setter > 30:
+        elif 70 < setter <= 100:
             self.item_found()
 
     def traveling_screen(self):
         print "LISTA: "
         print self.choosen_hero.item_list
+
+        print "ile itemow w liscie"
+        print len(self.choosen_hero.item_list)
+
         monster = Monster()
         displayloop = True
         while displayloop:
@@ -92,6 +97,7 @@ class Interface:
                     quit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_w:
+                        print "KLIKNALEM w"
                         self.random_screen(monster)
                     elif event.key == pygame.K_a:
                         self.random_screen(monster)
@@ -131,7 +137,6 @@ class Interface:
         if len(self.choosen_hero.item_list) != 0:
             for item in self.choosen_hero.item_list:
                 if item.name == "Fajna Zbroja ":
-
                     bonus = item.defense
                     print "bonus oborny: " + str(bonus)
                     return bonus + self.choosen_hero.count_resistance(self.dice)
@@ -188,6 +193,42 @@ class Interface:
         time.sleep(3)
         self.counting_monster_attack(monster)
 
+    def use_potion(self, monster):
+        if len(self.choosen_hero.item_list) != 0:
+            for item in self.choosen_hero.item_list:
+                if item.name == "Mikstura ":
+                    self.choosen_hero.item_list.remove(item)
+                    self.choosen_hero.stat_dict["HP"] += 10
+                    gameDisplay.fill(black)
+                    pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
+                    smallText = pygame.font.Font(None, 30)
+                    seconfsurfe, seconfrecte = text_objects("Leczysz sie o 10 pkt!", smallText, red)
+                    seconfrecte.center = (200, 460)
+                    gameDisplay.blit(seconfsurfe, seconfrecte)
+                    pygame.display.update()
+                    time.sleep(3)
+                    self.counting_monster_attack(monster)
+                else:
+                    gameDisplay.fill(black)
+                    pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
+                    smallText = pygame.font.Font(None, 30)
+                    seconfsurfe, seconfrecte = text_objects("Nie masz mikstur!", smallText, red)
+                    seconfrecte.center = (200, 460)
+                    gameDisplay.blit(seconfsurfe, seconfrecte)
+                    pygame.display.update()
+                    time.sleep(3)
+                    self.hero_action(monster)
+        else:
+            gameDisplay.fill(black)
+            pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
+            smallText = pygame.font.Font(None, 30)
+            seconfsurfe, seconfrecte = text_objects("Nie masz mikstur!", smallText, red)
+            seconfrecte.center = (200, 460)
+            gameDisplay.blit(seconfsurfe, seconfrecte)
+            pygame.display.update()
+            time.sleep(3)
+            self.hero_action(monster)
+
     def hero_action(self, monster):
         self.choosen_hero.parry_bonus = 0
         print "Instancje w hero action:" + str(sys.getrefcount(monster))
@@ -204,6 +245,9 @@ class Interface:
                         self.counting_parry(monster)
                     elif event.key == pygame.K_a:
                         print "dupaka"
+                    elif event.key == pygame.K_s:
+                        self.use_potion(monster)
+
             gameDisplay.fill(black)
             pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
             smallText = pygame.font.Font(None, 30)
@@ -213,9 +257,12 @@ class Interface:
             seconfsurf, seconfrect = text_objects("[d] Def", smallText, red)
             seconfrect.center = (122, 460)
             gameDisplay.blit(seconfsurf, seconfrect)
-            thirdsurf, thirdrect = text_objects("[a] RUN!", smallText, red)
+            thirdsurf, thirdrect = text_objects("[a] Flee", smallText, red)
             thirdrect.center = (126, 490)
             gameDisplay.blit(thirdsurf, thirdrect)
+            fousurf, fourect = text_objects("[s] Use Potion", smallText, red)
+            fourect.center = (126, 520)
+            gameDisplay.blit(fousurf, fourect)
             self.hero_stats(smallText)
             pygame.display.update()
 
@@ -324,13 +371,13 @@ class Interface:
             pygame.display.update()
 
     def random_item(self):
+        print "DUUUUPAAAA"
         armor = Armor()
         sword = Sword()
         potion = Potion()
         setter = randint(1, 100)
         print "taki roll na item: "
         print setter
-
         if setter <= 30:
             return sword
         elif 30 < setter < 60:
@@ -338,11 +385,59 @@ class Interface:
         elif setter >= 60:
             return potion
 
+    # def bag_options(self, instance):
+    #     choose = True
+    #     while choose:
+    #         for event in pygame.event.get():
+    #             if event.type == pygame.QUIT:
+    #                 pygame.quit()
+    #                 quit()
+    #         gameDisplay.fill(black)
+    #         smallText = pygame.font.Font('OldLondon.ttf', 30)
+    #         textSurf, textRect = text_objects("You'v found Item! But you have similar ", smallText, red)
+    #         textRect.center = (200, 100)
+    #         gameDisplay.blit(textSurf, textRect)
+    #         secSurf, secRect = text_objects(instance.name, smallText, red)
+    #         secRect.center = (200, 450)
+    #         gameDisplay.blit(secSurf, secRect)
+    #         thiSurf, thiRect = text_objects(instance.info, smallText, red)
+    #         thiRect.center = (200, 500)
+    #         gameDisplay.blit(thiSurf, thiRect)
+    #         button("Drop", 500, 530, 100, 50, black, dark_gray, self.traveling_screen)
+    #         start_button("Equip", 600, 530, 100, 50, black, dark_gray, instance, self.equip_item)
+    #
+    #         text2Surf, text2Rect = text_objects("In Your Bag: ", smallText, red)
+    #         text2Rect.center = (600, 100)
+    #         gameDisplay.blit(text2Surf, text2Rect)
+    #         sec2Surf, sec2Rect = text_objects(instance.name, smallText, red)
+    #         sec2Rect.center = (600, 450)
+    #         gameDisplay.blit(sec2Surf, sec2Rect)
+    #         thi2Surf, thi2Rect = text_objects(instance.info, smallText, red)
+    #         thiRect.center = (600, 500)
+    #         gameDisplay.blit(thi2Surf, thi2Rect)
+    #         pygame.display.update()
+    #
+    # def bag_checker(self, instance):
+    #     if self.choosen_hero.item_list != 0:
+    #         if any(isinstance(item, Sword) == isinstance(instance, Sword) for item in self.choosen_hero.item_list):
+    #             self.bag_options(instance)
+    #         elif any(isinstance(item, Armor) == isinstance(instance, Armor) for item in self.choosen_hero.item_list):
+    #             self.bag_options(instance)
+    #         else:
+    #             self.equip_item(instance)
+    #     else:
+    #         self.equip_item(instance)
+    #
+    # def equip_item(self, instance):
+    #     self.choosen_hero.item_list.append(instance)
+    #     self.traveling_screen()
+
     def item_found(self):
         item_loop = True
         item = self.random_item()
         self.choosen_hero.item_list.append(item)
-
+        if len(self.choosen_hero.item_list) == 6:
+            self.removing_inventory_screen()
         while item_loop:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -360,7 +455,7 @@ class Interface:
                 thiSurf, thiRect = text_objects(item.info, smallText, red)
                 thiRect.center = (400, 500)
                 gameDisplay.blit(thiSurf, thiRect)
-                button("Apply", 680, 20, 100, 50, black, dark_gray, self.traveling_screen)
+                button("Equip", 680, 20, 100, 50, black, dark_gray, self.traveling_screen)
                 pygame.display.update()
 
             elif item.name == "Fajna Zbroja ":
@@ -373,7 +468,7 @@ class Interface:
                 thiSurf, thiRect = text_objects(item.info, smallText, red)
                 thiRect.center = (400, 500)
                 gameDisplay.blit(thiSurf, thiRect)
-                button("Apply", 680, 20, 100, 50, black, dark_gray, self.traveling_screen)
+                button("Equip", 680, 20, 100, 50, black, dark_gray, self.traveling_screen)
                 pygame.display.update()
 
             elif item.name == "Mikstura ":
@@ -386,7 +481,7 @@ class Interface:
                 thiSurf, thiRect = text_objects(item.info, smallText, red)
                 thiRect.center = (400, 500)
                 gameDisplay.blit(thiSurf, thiRect)
-                button("Apply", 680, 20, 100, 50, black, dark_gray, self.traveling_screen)
+                button("Equip", 680, 20, 100, 50, black, dark_gray, self.traveling_screen)
                 pygame.display.update()
 
     def inventory_screen(self):
@@ -402,5 +497,84 @@ class Interface:
             for item in self.choosen_hero.item_list:
                 space_down += 70
                 row = str(item.name + item.info)
-                button(row, 20, (20 + space_down), 400, 50, black, dark_gray, self.traveling_screen)
+                start_button(row, 20, (20 + space_down), 400, 50, black, dark_gray, item, self.single_item_options)
             pygame.display.update()
+
+    def single_item_options(self, item):
+        item_loop = True
+        item = item
+        self.choosen_hero.item_list.append(item)
+        if len(self.choosen_hero.item_list) == 6:
+            self.removing_inventory_screen()
+        while item_loop:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+            gameDisplay.fill(black)
+            smallText = pygame.font.Font('OldLondon.ttf', 30)
+            if item.name == "Super Miecz ":
+                secSurf, secRect = text_objects(item.name, smallText, red)
+                secRect.center = (400, 350)
+                gameDisplay.blit(secSurf, secRect)
+                thiSurf, thiRect = text_objects(item.info, smallText, red)
+                thiRect.center = (400, 400)
+                gameDisplay.blit(thiSurf, thiRect)
+                button("Equip", 200, 450, 100, 50, black, dark_gray, self.traveling_screen)
+                start_button("Drop", 300, 450, 100, 50, black, dark_gray, item,  self.removing_element)
+                pygame.display.update()
+
+            elif item.name == "Fajna Zbroja ":
+                secSurf, secRect = text_objects(item.name, smallText, red)
+                secRect.center = (400, 350)
+                gameDisplay.blit(secSurf, secRect)
+                thiSurf, thiRect = text_objects(item.info, smallText, red)
+                thiRect.center = (400, 400)
+                gameDisplay.blit(thiSurf, thiRect)
+                button("Equip", 200, 450, 100, 50, black, dark_gray, self.traveling_screen)
+                start_button("Drop", 300, 450, 100, 50, black, dark_gray, item,  self.removing_element)
+                pygame.display.update()
+
+            elif item.name == "Mikstura ":
+                secSurf, secRect = text_objects(item.name, smallText, red)
+                secRect.center = (400, 350)
+                gameDisplay.blit(secSurf, secRect)
+                thiSurf, thiRect = text_objects(item.info, smallText, red)
+                thiRect.center = (400, 400)
+                gameDisplay.blit(thiSurf, thiRect)
+                button("Equip", 200, 450, 100, 50, black, dark_gray, self.traveling_screen)
+                start_button("Drop", 300, 450, 100, 50, black, dark_gray, item, self.removing_element)
+                pygame.display.update()
+
+    def removing_inventory_screen(self):
+        inv_loop = True
+        while inv_loop:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+            gameDisplay.fill(black)
+            button("Back", 680, 20, 100, 50, black, dark_gray, self.traveling_screen)
+            space_down = 0
+            for item in self.choosen_hero.item_list:
+                space_down += 70
+                row = str(item.name + item.info)
+                button(row, 20, (20 + space_down), 400, 50, black, dark_gray, self.traveling_screen)
+                start_button("Drop", 400, (20+space_down), 100, 50, black, dark_gray, item,  self.removing_element)
+            pygame.display.update()
+
+    def removing_element(self, item):
+        self.choosen_hero.item_list.remove(item)
+        self.removing_inventory_screen()
+
+
+    def items_action(self):
+        item_loop = True
+        while item_loop:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+            gameDisplay.fill(black)
+        button("Destroy", 550, 450, 100, 50, black, dark_gray, self.traveling_screen)
+        button("Equip", 150, 450, 100, 50, black, dark_gray, self.traveling_screen)
