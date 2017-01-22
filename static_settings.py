@@ -28,7 +28,7 @@ gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('SebaRPG')
 font = pygame.font.Font('OldLondon.ttf', 36)
 titleImg = pygame.image.load('newdevil.png')
-lvl_upImg = pygame.image.load('knight.png')
+hud = pygame.image.load('newhud.png')
 
 
 def text_objects(text, font, color):
@@ -51,7 +51,7 @@ def button(msg, x, y, w, h, ic, ac, action=None):
     else:
         pygame.draw.rect(gameDisplay, ic, (x, y, w, h))
 
-    smallText = pygame.font.Font('Deutsch.ttf',27)
+    smallText = pygame.font.Font('Pixeled.ttf',27)
     textSurf, textRect = text_objects(msg, smallText, red)
     textRect.center = ( (x+(w/2)), (y+(h/2)) )
     gameDisplay.blit(textSurf, textRect)
@@ -72,7 +72,7 @@ def start_button(msg, x, y, w, h, ic, ac, acion_arg, action=None):
             action(acion_arg)
     else:
         pygame.draw.rect(gameDisplay, ic, (x, y, w, h))
-    smallText = pygame.font.Font('Deutsch.ttf',27)
+    smallText = pygame.font.Font('Pixeled.ttf',27)
     textSurf, textRect = text_objects(msg, smallText, red)
     textRect.center = ((x+(w/2)), (y+(h/2)))
     gameDisplay.blit(textSurf, textRect)

@@ -21,12 +21,14 @@ class BaseCharacter:
         self.attribute_points = 10
         self.lvl_points = 0
         self.const_dict = self.attribute_dict.copy()
+        self.const_stat_dict = self.stat_dict.copy()
         self.item_list = []
         self. parry_bonus = 0
 
     parry_bonus = 0
     item_list = []
-
+    img = ''
+    back_img = ''
     info_dict = {'CLASS NAME': '', 'NAME': '', 'BIO': ''}
 
     hero_ini = "You Hit this nigga with: "
@@ -68,6 +70,9 @@ class BaseCharacter:
 class Barbarian(BaseCharacter):
     def __init__(self):
         BaseCharacter.__init__(self)
+        self.img = "barb.png"
+        self.back_img = "tyl_barb.png"
+
     info_dict = {'CLASS NAME': 'Barbarian', 'NAME': 'Socrates'}
     bio = 'A barbarian is a human who is perceived to be uncivilised or primitive. The designation is usually applied as generalization based on a popular stereotype; barbarians can be any member of a nation judged by some to be less civilised or orderly (such as a tribal society), but may also be part of a certain "primitive" cultural group (such as nomads) or social class (such as bandits) both within and outside ones own nation'
 
@@ -82,6 +87,8 @@ class Barbarian(BaseCharacter):
 class Hunter(object, BaseCharacter):
     def __init__(self):
         BaseCharacter.__init__(self)
+        self.img = "lowca_pop.png"
+        self.back_img = "tyl_lowcy.png"
     info_dict = {'CLASS NAME': 'Hunter', 'NAME': 'Jacke'}
     bio = 'Hunters are usually associated with the wisdom of nature. Rangers tend to be wise, hardy, cunning, and perceptive in addition to being skilled woodsmen. Many are skilled in woodcraft, stealth, wilderness survival, beast-mastery, herbalism, tracking, and sometimes "nature magic" or have a resistance to magic.'
 
@@ -96,6 +103,8 @@ class Hunter(object, BaseCharacter):
 class Mage(object, BaseCharacter):
     def __init__(self):
         BaseCharacter.__init__(self)
+        self.img = "wiekszy mag.png"
+        self.back_img = "tyl_maga.png"
     info_dict = {'CLASS NAME': 'Mage', 'NAME': 'Elendinr'}
     bio = 'Mage is someone who uses or practices magic derived from supernatural or occult sources. Magicians are common figures in works of fantasy, such as fantasy literature and role-playing games, and enjoy a rich history in mythology, legends, fiction, and folklore.'
     stat_dict = {

@@ -70,7 +70,7 @@ class Interface:
             makelist = list(row)
             makestring = ': '.join(makelist)
             statsurf, statrect = text_objects(makestring, text, red)
-            statrect.center = (750, (400 + space_counters))
+            statrect.center = (710, (450 + space_counters))
             gameDisplay.blit(statsurf, statrect)
 
     def random_screen(self, instanc):
@@ -82,13 +82,8 @@ class Interface:
             self.item_found()
 
     def traveling_screen(self):
-        print "LISTA: "
-        print self.choosen_hero.item_list
-
-        print "ile itemow w liscie"
-        print len(self.choosen_hero.item_list)
-
         monster = Monster()
+        hero_back = pygame.image.load(self.choosen_hero.back_img)
         displayloop = True
         while displayloop:
             for event in pygame.event.get():
@@ -107,31 +102,46 @@ class Interface:
                         self.inventory_screen()
 
 
-            smallText = pygame.font.Font(None, 30)
+            smallText = pygame.font.Font("Pixeled.ttf", 12)
             gameDisplay.fill(black)
-            pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
+            gameDisplay.blit(hud, (0, 400))
+
+            gameDisplay.blit(hero_back, (50, 200))
             firstsurf, firstrect = text_objects("[w] Travel North", smallText, red)
-            firstrect.center = (130, 430)
+            firstrect.center = (150, 470)
             gameDisplay.blit(firstsurf, firstrect)
             seconfsurf, seconfrect = text_objects("[d] Travel East", smallText, red)
-            seconfrect.center = (122, 460)
+            seconfrect.center = (150, 500)
             gameDisplay.blit(seconfsurf, seconfrect)
             thirdsurf, thirdrect = text_objects("[a] Travel West", smallText, red)
-            thirdrect.center = (126, 490)
+            thirdrect.center = (150, 530)
             gameDisplay.blit(thirdsurf, thirdrect)
             forthsurf, forthrect = text_objects("[i] Inventory", smallText, red)
-            forthrect.center = (740, 500)
+            forthrect.center = (570, 470)
             gameDisplay.blit(forthsurf, forthrect)
             self.hero_stats(smallText)
             pygame.display.update()
 
-    def fighting_screen(self, monster_class):
+    def mag(self):
+        displayloop = True
+        while displayloop:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+            gameDisplay.fill(black)
+            winkszy_barb = pygame.image.load(self.choosen_hero.img)
+            gameDisplay.blit(winkszy_barb, (500, 100))
+            pygame.display.update()
 
+    def fighting_screen(self, monster_class):
         print "Instancje w fightingu:" + str(sys.getrefcount(monster_class))
         if monster_class.attribute_dict["Agility"] > self.choosen_hero.attribute_dict["Agility"]:
-            self.counting_monster_attack(monster_class)
+            self.monster_strike_first(monster_class)
         else:
-            self.hero_action(monster_class)
+            self.monster_encoutered(monster_class)
+
+
 
     def counting_hero_defence(self):
         if len(self.choosen_hero.item_list) != 0:
@@ -147,14 +157,9 @@ class Interface:
 
     def counting_monster_attack(self, monster):
         displaaayloop = True
-        print "POSTACI OBRONA"
-        print self.counting_hero_defence()
-        print "JEGO ATAK"
-        print monster.attack(self.dice)
-
-        print type(monster.attack(self.dice))
-        print type(self.counting_hero_defence)
         attack_value = monster.attack(self.dice) - self.counting_hero_defence()
+        if attack_value <= 0:
+            attack_value = 0
         stringvalue = str(attack_value)
         self.choosen_hero.stat_dict["HP"] -= attack_value
         while displaaayloop:
@@ -163,13 +168,15 @@ class Interface:
                     pygame.quit()
                     quit()
             gameDisplay.fill(black)
-            pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
-            smallText = pygame.font.Font(None, 30)
+            gameDisplay.blit(hud, (0, 400))
+            hero_back = pygame.image.load(self.choosen_hero.back_img)
+            gameDisplay.blit(hero_back, (50, 200))
+            smallText = pygame.font.Font("Pixeled.ttf", 10)
             firstsurf, firstrect = text_objects(monster.won_ini, smallText, red)
-            firstrect.center = (130, 430)
+            firstrect.center = (170, 470)
             gameDisplay.blit(firstsurf, firstrect)
             seconfsurf, seconfrect = text_objects(stringvalue + "dmg", smallText, red)
-            seconfrect.center = (122, 460)
+            seconfrect.center = (130, 500)
             gameDisplay.blit(seconfsurf, seconfrect)
             self.hero_stats(smallText)
             pygame.display.update()
@@ -184,10 +191,10 @@ class Interface:
     def counting_parry(self, monster):
         self.choosen_hero.parry_bonus = 3
         gameDisplay.fill(black)
-        pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
-        smallText = pygame.font.Font(None, 30)
+        gameDisplay.blit(hud, (0, 400))
+        smallText = pygame.font.Font("Pixeled.ttf", 10)
         seconfsurfe, seconfrecte = text_objects("Obrona zwieksza sie o 3 na jedna ture!", smallText, red)
-        seconfrecte.center = (200, 460)
+        seconfrecte.center = (200, 470)
         gameDisplay.blit(seconfsurfe, seconfrecte)
         pygame.display.update()
         time.sleep(3)
@@ -197,20 +204,46 @@ class Interface:
         if len(self.choosen_hero.item_list) != 0:
             for item in self.choosen_hero.item_list:
                 if item.name == "Mikstura ":
-                    self.choosen_hero.item_list.remove(item)
-                    self.choosen_hero.stat_dict["HP"] += 10
-                    gameDisplay.fill(black)
-                    pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
-                    smallText = pygame.font.Font(None, 30)
-                    seconfsurfe, seconfrecte = text_objects("Leczysz sie o 10 pkt!", smallText, red)
-                    seconfrecte.center = (200, 460)
-                    gameDisplay.blit(seconfsurfe, seconfrecte)
-                    pygame.display.update()
-                    time.sleep(3)
-                    self.counting_monster_attack(monster)
+                    if self.choosen_hero.stat_dict["HP"] == self.choosen_hero.const_stat_dict["HP"]:
+                        gameDisplay.fill(black)
+                        gameDisplay.blit(hud, (0, 400))
+                        smallText = pygame.font.Font("Pixeled.ttf", 10)
+                        seconfsurfe, seconfrecte = text_objects("Masz maksymalna ilosc zycia", smallText, red)
+                        seconfrecte.center = (200, 460)
+                        gameDisplay.blit(seconfsurfe, seconfrecte)
+                        pygame.display.update()
+                        time.sleep(3)
+                        self.hero_action(monster)
+                    else:
+                        self.choosen_hero.item_list.remove(item)
+                        hp_difference = self.choosen_hero.const_stat_dict["HP"] - self.choosen_hero.stat_dict["HP"]
+                        if hp_difference < 10:
+                            print "dodalem tyle: " + str(hp_difference)
+                            self.choosen_hero.stat_dict["HP"] += hp_difference
+                            gameDisplay.fill(black)
+                            gameDisplay.blit(hud, (0, 400))
+                            smallText = pygame.font.Font("Pixeled.ttf", 10)
+                            seconfsurfe, seconfrecte = text_objects("Leczysz sie o 10 pkt!", smallText, red)
+                            seconfrecte.center = (200, 460)
+                            gameDisplay.blit(seconfsurfe, seconfrecte)
+                            pygame.display.update()
+                            time.sleep(3)
+                            self.counting_monster_attack(monster)
+                        elif hp_difference >= 10:
+                            self.choosen_hero.stat_dict["HP"] += 10
+                            print "dodalem tyle: 10"
+                            gameDisplay.fill(black)
+                            gameDisplay.blit(hud, (0, 400))
+                            smallText = pygame.font.Font(None, 30)
+                            seconfsurfe, seconfrecte = text_objects("Leczysz sie o 10 pkt!", smallText, red)
+                            seconfrecte.center = (200, 460)
+                            gameDisplay.blit(seconfsurfe, seconfrecte)
+                            pygame.display.update()
+                            time.sleep(3)
+                            self.counting_monster_attack(monster)
                 else:
                     gameDisplay.fill(black)
-                    pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
+                    gameDisplay.blit(hud, (0, 400))
                     smallText = pygame.font.Font(None, 30)
                     seconfsurfe, seconfrecte = text_objects("Nie masz mikstur!", smallText, red)
                     seconfrecte.center = (200, 460)
@@ -220,8 +253,8 @@ class Interface:
                     self.hero_action(monster)
         else:
             gameDisplay.fill(black)
-            pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
-            smallText = pygame.font.Font(None, 30)
+            gameDisplay.blit(hud, (0, 400))
+            smallText = pygame.font.Font("Pixeled.ttf", 10)
             seconfsurfe, seconfrecte = text_objects("Nie masz mikstur!", smallText, red)
             seconfrecte.center = (200, 460)
             gameDisplay.blit(seconfsurfe, seconfrecte)
@@ -229,8 +262,57 @@ class Interface:
             time.sleep(3)
             self.hero_action(monster)
 
+    def if_flee(self, monster):
+        setter = randint(1, 100)
+        if setter <= 50:
+            gameDisplay.fill(black)
+            gameDisplay.blit(hud, (0, 400))
+            smallText = pygame.font.Font("Pixeled.ttf", 10)
+            seconfsurfe, seconfrecte = text_objects("Nie udalo Ci sie uciec", smallText, red)
+            seconfrecte.center = (300, 50)
+            monszter = pygame.image.load(monster.monster_img)
+            gameDisplay.blit(monszter, (400, 50))
+            gameDisplay.blit(seconfsurfe, seconfrecte)
+            pygame.display.update()
+            time.sleep(3)
+            self.counting_monster_attack(monster)
+        elif 50 < setter <= 100:
+            gameDisplay.fill(black)
+            gameDisplay.blit(hud, (0, 400))
+            smallText = pygame.font.Font("Pixeled.ttf", 10)
+            seconfsurfe, seconfrecte = text_objects("Udalo Ci sie uciec", smallText, red)
+            seconfrecte.center = (200, 460)
+            gameDisplay.blit(seconfsurfe, seconfrecte)
+            pygame.display.update()
+            time.sleep(3)
+            self.traveling_screen()
+
+    def monster_strike_first(self, monster_class):
+        gameDisplay.fill(black)
+        gameDisplay.blit(hud, (0, 400))
+        smallText = pygame.font.Font("Pixeled.ttf", 15)
+        firstsurf, firstrect = text_objects("Monster Attacked You!", smallText, red)
+        firstrect.center = (300, 50)
+        gameDisplay.blit(firstsurf, firstrect)
+        pygame.display.update()
+        time.sleep(3)
+        self.counting_monster_attack(monster_class)
+
+    def monster_encoutered(self, monster):
+        gameDisplay.fill(black)
+        gameDisplay.blit(hud, (0, 400))
+        smallText = pygame.font.Font("Pixeled.ttf", 15)
+        firstsurf, firstrect = text_objects("Monster Encountered, you will strike first!", smallText, red)
+        firstrect.center = (300, 50)
+        gameDisplay.blit(firstsurf, firstrect)
+        pygame.display.update()
+        time.sleep(3)
+        self.hero_action(monster)
+
     def hero_action(self, monster):
+
         self.choosen_hero.parry_bonus = 0
+        hero_back = pygame.image.load(self.choosen_hero.back_img)
         print "Instancje w hero action:" + str(sys.getrefcount(monster))
         displaaaayloop = True
         while displaaaayloop:
@@ -244,24 +326,25 @@ class Interface:
                     elif event.key == pygame.K_d:
                         self.counting_parry(monster)
                     elif event.key == pygame.K_a:
-                        print "dupaka"
+                        self.if_flee(monster)
                     elif event.key == pygame.K_s:
                         self.use_potion(monster)
 
             gameDisplay.fill(black)
-            pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
-            smallText = pygame.font.Font(None, 30)
+            gameDisplay.blit(hud, (0, 400))
+            gameDisplay.blit(hero_back, (50, 200))
+            smallText = pygame.font.Font('Pixeled.ttf', 10)
             firstsurf, firstrect = text_objects("[w] Attack", smallText, red)
-            firstrect.center = (130, 430)
+            firstrect.center = (130, 470)
             gameDisplay.blit(firstsurf, firstrect)
             seconfsurf, seconfrect = text_objects("[d] Def", smallText, red)
-            seconfrect.center = (122, 460)
+            seconfrect.center = (130, 500)
             gameDisplay.blit(seconfsurf, seconfrect)
             thirdsurf, thirdrect = text_objects("[a] Flee", smallText, red)
-            thirdrect.center = (126, 490)
+            thirdrect.center = (130, 530)
             gameDisplay.blit(thirdsurf, thirdrect)
             fousurf, fourect = text_objects("[s] Use Potion", smallText, red)
-            fourect.center = (126, 520)
+            fourect.center = (300, 470)
             gameDisplay.blit(fousurf, fourect)
             self.hero_stats(smallText)
             pygame.display.update()
@@ -286,18 +369,22 @@ class Interface:
         monster.stat_dict["HP"] -= attack_value
         print monster.stat_dict['HP']
         gameDisplay.fill(black)
-        pygame.draw.rect(gameDisplay, white, (0, 400, 800, 200))
+        gameDisplay.blit(hud, (0, 400))
         smallText = pygame.font.Font(None, 30)
+        monszter = pygame.image.load(monster.monster_img)
+        gameDisplay.blit(monszter, (400, 50))
+        hero_back = pygame.image.load(self.choosen_hero.back_img)
+        gameDisplay.blit(hero_back, (50, 200))
         firstsurf, firstrect = text_objects(self.choosen_hero.hero_ini, smallText, red)
-        firstrect.center = (130, 430)
+        firstrect.center = (170, 470)
         gameDisplay.blit(firstsurf, firstrect)
         seconfsurf, seconfrect = text_objects(stringvalue + "dmg", smallText, red)
-        seconfrect.center = (122, 460)
+        seconfrect.center = (130, 500)
         gameDisplay.blit(seconfsurf, seconfrect)
         self.hero_stats(smallText)
         if monster.stat_dict['HP'] <= 0:
             seconfsurfe, seconfrecte = text_objects("Wygrales Walke", smallText, red)
-            seconfrecte.center = (122, 460)
+            seconfrecte.center = (130, 540)
             gameDisplay.blit(seconfsurfe, seconfrecte)
             pygame.display.update()
         pygame.display.update()
@@ -322,7 +409,7 @@ class Interface:
                         pygame.quit()
                         quit()
             gameDisplay.fill(black)
-            largeText = pygame.font.Font('OldLondon.ttf', 80)
+            largeText = pygame.font.Font('Pixeled.ttf', 20)
             TextSurf, TextRect = text_objects('You Lose! Start Again?', largeText, red)
             TextRect.center = ((display_width/2), (70))
             gameDisplay.blit(titleImg, (175, 150))
@@ -343,8 +430,8 @@ class Interface:
                     quit()
             gameDisplay.fill(black)
             pygame.draw.rect(gameDisplay, black, (20, 20, 760, 560))
-            smallText = pygame.font.Font('OldLondon.ttf', 30)
-            meciumText = pygame.font.Font('OldLondon.ttf', 40)
+            smallText = pygame.font.Font('Pixeled.ttf', 12)
+            meciumText = pygame.font.Font('Pixeled.ttf', 17)
             textSurf, textRect = text_objects('Statistics', meciumText, red)
             textRect.center = (80, 40)
             gameDisplay.blit(textSurf, textRect)
@@ -360,13 +447,14 @@ class Interface:
                 textRect.center = (110, (22 + space_counter))
                 gameDisplay.blit(textSurf, textRect)
             button("Apply", 680, 20, 100, 50, black, dark_gray, self.traveling_screen)
+            hero_portret = pygame.image.load(self.choosen_hero.img)
+            gameDisplay.blit(hero_portret, (400, 100))
             textSurf, textRect = text_objects(str(self.choosen_hero.lvl_points), smallText, red)
             textRect.center = (190, 550)
             gameDisplay.blit(textSurf, textRect)
             textSurf, textRect = text_objects('Points: ', meciumText, red)
             textRect.center = (120, 550)
             gameDisplay.blit(textSurf, textRect)
-            gameDisplay.blit(lvl_upImg, (400, 300))
 
             pygame.display.update()
 
@@ -444,7 +532,7 @@ class Interface:
                     pygame.quit()
                     quit()
             gameDisplay.fill(black)
-            smallText = pygame.font.Font('OldLondon.ttf', 30)
+            smallText = pygame.font.Font('Pixeled.ttf', 15)
             if item.name == "Super Miecz ":
                 textSurf, textRect = text_objects("You'v found Sword!", smallText, red)
                 textRect.center = (400, 100)
@@ -503,7 +591,6 @@ class Interface:
     def single_item_options(self, item):
         item_loop = True
         item = item
-        self.choosen_hero.item_list.append(item)
         if len(self.choosen_hero.item_list) == 6:
             self.removing_inventory_screen()
         while item_loop:
@@ -512,7 +599,8 @@ class Interface:
                     pygame.quit()
                     quit()
             gameDisplay.fill(black)
-            smallText = pygame.font.Font('OldLondon.ttf', 30)
+            smallText = pygame.font.Font('Pixeled.ttf', 15)
+
             if item.name == "Super Miecz ":
                 secSurf, secRect = text_objects(item.name, smallText, red)
                 secRect.center = (400, 350)
@@ -554,19 +642,21 @@ class Interface:
                     pygame.quit()
                     quit()
             gameDisplay.fill(black)
-            button("Back", 680, 20, 100, 50, black, dark_gray, self.traveling_screen)
+            if len(self.choosen_hero.item_list) < 6:
+                button("Back", 680, 20, 100, 50, black, dark_gray, self.traveling_screen)
             space_down = 0
+
+            print self.choosen_hero.item_list
             for item in self.choosen_hero.item_list:
                 space_down += 70
                 row = str(item.name + item.info)
-                button(row, 20, (20 + space_down), 400, 50, black, dark_gray, self.traveling_screen)
-                start_button("Drop", 400, (20+space_down), 100, 50, black, dark_gray, item,  self.removing_element)
+                button(row, 40, (20 + space_down), 400, 50, black, dark_gray, self.traveling_screen)
+                start_button("Drop", 400, (20+space_down), 100, 50, black, dark_gray, item, self.removing_element)
             pygame.display.update()
 
     def removing_element(self, item):
         self.choosen_hero.item_list.remove(item)
-        self.removing_inventory_screen()
-
+        self.traveling_screen()
 
     def items_action(self):
         item_loop = True
